@@ -4,9 +4,13 @@
 	"version": "0.0.1",
 	"author": "mendlik",
 
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/exacode/nodejs-rest-quickstart.git"
+	},
+
 	"scripts": {
-		"start": "grunt start",
-		"test": "grunt test"
+		"start": "node app/app.js"
 	},
 
 	"dependencies": {
