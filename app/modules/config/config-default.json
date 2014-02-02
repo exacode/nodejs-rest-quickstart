@@ -1,0 +1,15 @@
+{
+	"env": "default",
+	"app": {
+		"name": "nodejs-rest-quickkstart",
+		"host": "127.0.0.1",
+		"port": "8080"
+	},
+	"mongodb": {
+		"host": "127.0.0.1",
+		"port": "",
+		"user": "",
+		"password": "",
+		"db": ""
+	}
+}
