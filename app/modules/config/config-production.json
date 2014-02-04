@@ -1,3 +1,13 @@
 {
-	"env": "production"
+	"env": "production",
+	"logger": {
+		"streams": [
+			{
+				"type": "rotating-file",
+				"period": "1d",
+				"file": "./tmp/nodejs-rest-quickstart.log",
+				"count": 3
+			}
+		]
+	}
 }

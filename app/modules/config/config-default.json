@@ -11,5 +11,18 @@
 		"user": "",
 		"password": "",
 		"db": ""
+	},
+	"logger": {
+		"streams": [
+			{
+				"type": "file",
+				"path": "./tmp/nodejs-rest-quickstart.log",
+				"level": "trace"
+			}, 
+			{
+				"type": "console",
+				"level": "trace"
+			}
+		]
 	}
 }
