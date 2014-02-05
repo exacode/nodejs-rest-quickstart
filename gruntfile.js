@@ -6,6 +6,7 @@ module.exports = function (grunt) {
 	require('time-grunt')(grunt);
 	// load all grunt tasks
 	require('load-grunt-tasks')(grunt);
+
 	// configurable paths
 	var paths = {
 		app: 'app',			// points to main source directory
@@ -25,12 +26,19 @@ module.exports = function (grunt) {
 		},
 		// test js code
 		mochaTest: {
-			test: {
+			unit: {
 				options: {
 					reporter: 'spec',
 					require: paths.test + '/blanket'
 				},
-				src: [paths.test + '/**/*.js']
+				src: [paths.test + '/unit/**/*.js']
+			},
+			integration: {
+				options: {
+					reporter: 'spec',
+					require: paths.test + '/blanket'
+				},
+				src: [paths.test + '/integration/**/*.js']
 			},
 			coverage: {
 				options: {
@@ -49,6 +57,12 @@ module.exports = function (grunt) {
 					paths.test + '/**/*.js'
 				],
 				tasks: ['test']
+			}
+		},
+		// monitos changes in application and restart the server
+		nodemon: {
+			dev: {
+				script: './app/start.js'
 			}
 		},
 		// remove temporary directories
@@ -77,13 +91,10 @@ module.exports = function (grunt) {
 
 	// Testing
 	grunt.registerTask('test', [
-		'mochaTest:test'		// BDD tests with jasmine 
+		'mochaTest:unit',		// run unit tests
+		'mochaTest:integration'	// run unit tests
 	]);
 
-	// Development
-	grunt.registerTask('develop', [
-		'watch'					// watch for changes in js files in order to run tests
-	]);
 
 	// Default task
 	grunt.registerTask('default', [
@@ -92,5 +103,9 @@ module.exports = function (grunt) {
 		'test',					// run tests
 		'report'				// generate reports
 	]);
+
+	// Development
+	// grunt watch				// watch for changes in js files in order to run tests
+	// grunt nodemon			// start nodejs and reload on changes
 
 };

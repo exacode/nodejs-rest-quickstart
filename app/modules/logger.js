@@ -2,47 +2,11 @@
 
 var bunyan = require('bunyan');
 var config = require('./config/config.js');
-var projectDir = __dirname + '/../../';
-
-var streams = [];
-config.logger.streams.forEach(function(streamConf) {
-	switch (streamConf.type) {
-		case "file":
-			streams.push({
-				type: 'file',
-				path: (streamConf.path || './app.log').replace(/^\.\//, projectDir),
-				level: streamConf.level || 'trace'
-			});
-		break;
-		case "rotating-file":
-			streams.push({
-				type: 'rotating-file',
-				path: (streamConf.path || './app.log').replace(/^\.\//, projectDir),
-				period: streamConf.period || '1d',	// daily rotation
-				count: streamConf.count || 3,		// keep 3 back copies
-				level: streamConf.level || 'trace'
-			});
-		break;
-		default: // case "console":
-			var PrettyStream = require('bunyan-prettystream');
-			var prettyStdOut = new PrettyStream({
-				mode: streamConf.colors || 'short',
-				useColor: streamConf.colors || true
-			});
-			prettyStdOut.pipe(process.stdout);
-			streams.push({
-				type: 'raw',
-				stream: prettyStdOut,
-				level: streamConf.level || 'trace'
-			});
-		break;
-	}
-});
 
 exports.create = function(name) {
 	return bunyan.createLogger({
 		name: name,
-		streams: streams,
+		streams: generateStreams(),
 		serializers: {
 			err: bunyan.stdSerializers.err,
 			req: bunyan.stdSerializers.req,
@@ -62,3 +26,42 @@ exports.overrideConsole = function(logger) {
 		logger.error.apply(logger, arguments);
 	};
 };
+
+function generateStreams() {
+	var projectDir = __dirname + '/../../';
+	var streams = [];
+	config.logger.streams.forEach(function(streamConf) {
+		switch (streamConf.type) {
+			case "file":
+				streams.push({
+					type: 'file',
+					path: (streamConf.path || './app.log').replace(/^\.\//, projectDir),
+					level: streamConf.level || 'trace'
+				});
+			break;
+			case "rotating-file":
+				streams.push({
+					type: 'rotating-file',
+					path: (streamConf.path || './app.log').replace(/^\.\//, projectDir),
+					period: streamConf.period || '1d',	// daily rotation
+					count: streamConf.count || 3,		// keep 3 back copies
+					level: streamConf.level || 'trace'
+				});
+			break;
+			default: // case "console":
+				var PrettyStream = require('bunyan-prettystream');
+				var prettyStdOut = new PrettyStream({
+					mode: streamConf.colors || 'short',
+					useColor: streamConf.colors || true
+				});
+				prettyStdOut.pipe(process.stdout);
+				streams.push({
+					type: 'raw',
+					stream: prettyStdOut,
+					level: streamConf.level || 'trace'
+				});
+			break;
+		}
+	});
+	return streams;
+}
