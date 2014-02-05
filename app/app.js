@@ -7,14 +7,16 @@ var express = require('express');
 var app = express();
 
 // Express configuration
-if (config.log.request || config.log.response) {
+var logRequest = config.app.log.request;
+var logResponse = config.app.log.response;
+if (logRequest || logResponse) {
 	// Request/Reponse logging
 	app.use(function(request, response, next){
-		if (config.log.request)
+		if (logRequest)
 			logger.trace({req: request}, "HTTP Request %s", request.url);
 		next();
-		if (config.log.response)
-			logger.trace({res: response}, "HTTP Response %s", response.url);
+		if (logResponse)
+			logger.trace({res: response}, "HTTP Response %s", request.url);
 	});
 }
 app.use(app.router);
