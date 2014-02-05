@@ -4,6 +4,10 @@
 		"name": "nodejs-rest-quickkstart",
 		"host": "127.0.0.1",
 		"port": "8080"
+		"log" : {
+			"request": true,
+			"response": true
+		}
 	},
 	"mongodb": {
 		"host": "127.0.0.1",

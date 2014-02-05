@@ -17,11 +17,10 @@ Functionality:
 JS utility library. Contains endless utility functions that ease the development process.
 (It's like apache-commons/guava for Java)
 
-### [Resitfy](http://mcavage.me/node-restify/)
+### [Express](http://mcavage.me/node-restify/)
 
-Restify is designed for building restful applications. 
-It contains useful mechanisms like: versioning, content negotiation and error handling.
-I doesn't contain unnecessary code like templating mechanism.
+Express widely used web framework for NodeJS. 
+It's fast and flexible.
 
 ### [Bunyan](https://github.com/trentm/node-bunyan)
 

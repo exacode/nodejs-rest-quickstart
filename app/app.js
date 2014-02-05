@@ -1,45 +1,53 @@
 'use strict';
 
-var Logger = require('./modules/logger');
-var logger = Logger.create('App');
-Logger.overrideConsole(Logger.create('Console'));
-
+var logger = require('./modules/logger').create('App');
 var config = require('./modules/config/config');
-var restify = require('restify');
 
-var server = restify.createServer({
-	name : config.app.name
+var express = require('express');
+var app = express();
+
+// Express configuration
+if (config.log.request || config.log.response) {
+	// Request/Reponse logging
+	app.use(function(request, response, next){
+		if (config.log.request)
+			logger.trace({req: request}, "HTTP Request %s", request.url);
+		next();
+		if (config.log.response)
+			logger.trace({res: response}, "HTTP Response %s", response.url);
+	});
+}
+app.use(app.router);
+app.use(function(err, req, res, next) {
+	// Error handling
+	if(!err) return next();
+	logger.error({"err": err}, "Server error!!!");
+	res.send("error!!!");
+});
+app.use(express.bodyParser());
+app.use(express.methodOverride());
+
+// Defining routings
+var versions = {'v0': 'Pre-release', 'v1': 'Version 1'};
+
+app.get('/versions', function(req, res) {
+	res.json(versions);
 });
 
-if (config.env === 'development') {
-	// Request logging
-	server.pre(function (request, response, next) {
-		logger.trace({req: request}, 'HTTP Request');
-		return next();
-	});
-
-	// Response logging
-	server.on('after', function (request, response) {
-		logger.trace({res: response}, "HTTP Response");
-	});
-	
-	// Initaialization log
-	server.listen(config.app.port, config.app.host, function(){
-		logger.info('%s listening at %s ', server.name , server.url);
-		logger.debug({'configuration': config});
-	});
-
-	// Overriden logging through console for sub modules
-	console.log("console.log");
-	console.debug("console.debug");
-	console.info("console.info");
-	console.error("console.error");
+for (var version in versions) {
+	logger.info('Version %s', version);
+	var prefix = '/' + version;
+	var api = require('./routes/' + version + '/api');
+	api.setup(prefix, app);
 }
 
-server.get({path : '/hello' , version : '0.0.1'} , sayHello);
+// 404 mapping - keep it always at the end
+app.use(function(req, res){
+	res.send(404, 'Resource not found');
+});
 
-function sayHello(req, res , next){
-	logger.info('Saying hello');
-	res.send(200 , "Hi there!");
-	return next();
-}
+exports.start = function start() {
+	var port = config.app.port;
+	app.listen(port);
+	logger.info("Listening on port %s", port);
+};

@@ -55,9 +55,6 @@ exports.overrideConsole = function(logger) {
 	console.log = function() {
 		logger.trace.apply(logger, arguments);
 	};
-	console.debug = function() {
-		logger.debug.apply(logger, arguments);
-	};
 	console.info = function() {
 		logger.info.apply(logger, arguments);
 	};
