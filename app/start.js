@@ -1,12 +1,12 @@
 'use strict';
 
 console.log("Starting logger...");
-var Logger = require('./modules/logger');
+var Logger = require('./lib/logger');
 var logger = Logger.create('Server');
 Logger.overrideConsole(Logger.create('Console'));
 logger.info("Logger started");
 
-var config = require('./modules/config/config');
+var config = require('./lib/config');
 logger.info("Environment: " + config.env);
 if (config.env === 'development') {
 	logger.info({ "config" : config }, "Active configuration");

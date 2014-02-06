@@ -1,6 +1,6 @@
 'use strict';
 
-var logger = require('./../modules/logger').create('App');
+var logger = require('../lib/logger').create('App');
 
 exports.resourceNotFoundErrorHandler = function (req, res) {
 	res.send(404, 'Resource not found');

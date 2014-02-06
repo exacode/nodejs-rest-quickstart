@@ -1,10 +1,12 @@
 'use strict';
-var logger = require('../../modules/logger').create('Api_v0');
+var logger = require('../../lib/logger').create('Api_v0');
 
-exports.setup = function(prefix, app) {
-	app.get(prefix + '/hello', sayHello);
-	app.get(prefix + '/error', showError);
-};
+var app = require('express')();
+
+module.exports = app;
+
+app.get('/hello', sayHello);
+app.get('/error', showError);
 
 function sayHello(req, res) {
 	logger.info('Saying hello - version 0');

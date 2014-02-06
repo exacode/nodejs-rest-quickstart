@@ -2,10 +2,11 @@
 'use strict';
 
 var _ = require('lodash');
-var config = require('./config-default.json');
+var configDir = '../../config/';
+var config = require(configDir + 'config-default.json');
 
 var env = process.env.NODE_ENV || 'development';
-var configEnv = require('./config-' + env + '.json');
+var configEnv = require(configDir + 'config-' + env + '.json');
 config = _.merge(config, configEnv);
 
 module.exports = config;

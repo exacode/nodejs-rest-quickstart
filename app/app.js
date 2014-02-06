@@ -1,8 +1,8 @@
 'use strict';
 
-var logger = require('./modules/logger').create('App');
-var config = require('./modules/config/config');
-var error = require('./routes/error');
+var logger = require('./lib/logger').create('App');
+var config = require('./lib/config');
+var error = require('./controllers/error');
 
 var express = require('express');
 var app = express();
@@ -17,8 +17,9 @@ setupAppRouting();
 
 exports.start = function start() {
 	var port = config.app.port;
-	app.listen(port);
-	logger.info("Listening on port %s", port);
+	app.listen(port, function() {
+		logger.info("Application started. Listening on port %s", port);
+	});
 };
 
 exports.app = app;
@@ -53,8 +54,8 @@ function setupAppRouting() {
 	for (var version in versions) {
 		logger.info('Version %s', version);
 		var prefix = '/' + version;
-		var api = require('./routes/' + version + '/api');
-		api.setup(prefix, app);
+		var api = require('./controllers/' + version + '/api');
+		app.use(prefix, api);
 	}
 
 	// 404 mapping - keep it always at the end
