@@ -8,7 +8,7 @@ logger.info("Logger started");
 
 var config = require('./lib/config');
 logger.info("Environment: " + config.env);
-if (config.env === 'development') {
+if (config.app.log.config) {
 	logger.info({ "config" : config }, "Active configuration");
 }
 

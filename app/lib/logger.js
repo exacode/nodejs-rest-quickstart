@@ -2,6 +2,8 @@
 
 var bunyan = require('bunyan');
 var config = require('./config');
+var fs = require('fs');
+var path = require('path');
 
 exports.overrideConsole = function(logger) {
 	console.log = function() {
@@ -47,17 +49,21 @@ function generateStreams() {
 }
 
 function generateFileStream(config, projectDir) {
+	var filePath = (config.path || './app.log').replace(/^\.\//, projectDir);
+	createDirWithParents(path.dirname(filePath));
 	return {
 		type: 'file',
-		path: (config.path || './app.log').replace(/^\.\//, projectDir),
+		path: filePath,
 		level: config.level || 'trace'
 	};
 }
 
 function generateRotatingFileStream(config, projectDir) {
+	var filePath = (config.path || './app.log').replace(/^\.\//, projectDir);
+	createDirWithParents(path.dirname(filePath));
 	return {
 		type: 'rotating-file',
-		path: (config.path || './app.log').replace(/^\.\//, projectDir),
+		path: filePath,
 		period: config.period || '1d',	// daily rotation
 		count: config.count || 3,		// keep 3 back copies
 		level: config.level || 'trace'
@@ -76,4 +82,17 @@ function generateConsoleStream(config) {
 		stream: prettyStdOut,
 		level: config.level || 'trace'
 	};
+}
+
+function createDirWithParents(dirname) {
+	if (fs.existsSync(dirname)) {
+		return;
+	}
+	var parent = path.dirname(dirname);
+	if (!fs.existsSync(parent)) {
+		createDirWithParents(parent);
+	}
+	if (!fs.existsSync(dirname)) {
+		fs.mkdirSync(dirname);
+	}
 }
