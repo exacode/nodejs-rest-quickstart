@@ -56,7 +56,7 @@ module.exports = function (grunt) {
 					paths.app + '/**/*.js',
 					paths.test + '/**/*.js'
 				],
-				tasks: ['test']
+				tasks: ['jshint', 'mochaTest:unit']
 			}
 		},
 		// monitos changes in application and restart the server
@@ -99,7 +99,7 @@ module.exports = function (grunt) {
 	// Default task
 	grunt.registerTask('default', [
 		'clean',				// cleans temporary directories
-		'mkdir',				// creates directory structure if missin
+		'mkdir',				// creates directory structure if missing
 		'test',					// run tests
 		'report'				// generate reports
 	]);
