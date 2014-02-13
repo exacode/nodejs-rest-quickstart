@@ -1,7 +1,7 @@
 'use strict';
 
 var should = require('chai').should();
-var Calculator = require('../../app/modules/calculator.js').Calculator;
+var Calculator = require('../../app/lib/calculator.js').Calculator;
 
 describe('Calculator',function(){
 
