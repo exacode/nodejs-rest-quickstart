@@ -22,9 +22,12 @@ On production environment start application with [supervisor](https://github.com
 In order to change application environment use:
 
 - Windows: 
+
 		set NODE_ENV=production
 		supervisor app/start.js
+
 - Unix/Linux:
+
 		NODE_ENV=production supervisor app/start.js
 
 Functionalities
