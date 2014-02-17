@@ -62,18 +62,35 @@ module.exports = function (grunt) {
 		// monitos changes in application and restart the server
 		nodemon: {
 			dev: {
-				script: './app/start.js'
+				script: paths.app + '/start.js',
+				options: {
+					ignore: ["bin/**", "test/**", "node_modules/**", "resport/**"],
+					nodeArgs: ["--debug"],
+					delayTime: 1,
+					watch: [paths.app, 'gruntfile.js'],
+					ext: "js"
+				}
 			}
 		},
 		// remove temporary directories
 		clean: {
-			tmp: [paths.tmp],
+			tmp: [paths.tmp + '/**'],
 		},
-		// create temporary directories
-		mkdir: {
-			tmp: {
+		// debugging mechanism
+		"node-inspector": {
+			dev: {
 				options: {
-					create: [ paths.tmp ]
+					'web-port': 1337,
+					'debug-port': 5858
+				}
+			}
+		},
+		// starts nodemon with node-inspector
+		concurrent: {
+			dev: {
+				tasks: ["nodemon", "node-inspector"],
+				options: {
+					logConcurrentOutput: true
 				}
 			}
 		}
@@ -98,14 +115,16 @@ module.exports = function (grunt) {
 
 	// Default task
 	grunt.registerTask('default', [
-		'clean',				// cleans temporary directories
-		'mkdir',				// creates directory structure if missing
+		'clean',				// cleans temporary directory
 		'test',					// run tests
 		'report'				// generate reports
 	]);
 
 	// Development
 	// grunt watch				// watch for changes in js files in order to run tests
-	// grunt nodemon			// start nodejs and reload on changes
+	// grunt dev				// start nodejs and reloads on changes, start debugger on default port 1337
+	grunt.registerTask('dev', [
+		'concurrent:dev'
+	]);
 
 };
