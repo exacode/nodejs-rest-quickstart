@@ -49,7 +49,7 @@ Dependencies
 
 ### Testing modules:
 
-- [Mocha](http://visionmedia.github.io/mocha/) - test framework
+- [Mocha](http://mochajs.org/) - test framework
 - [Chai](http://chaijs.com/guide/styles/) - assertion mechanisms
 - [Sinon](http://sinonjs.org/) - mocking framework
 - [Blanket](http://blanketjs.org/) - code coverage
